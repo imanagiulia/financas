@@ -230,17 +230,33 @@ function app() {
           return;
         }
 
-        this.supabase = window.supabase.createClient(cfg.supabase_url, cfg.supabase_anon_key, {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
-        });
+        if (!window._supabaseClient) {
+          window._supabaseClient = window.supabase.createClient(cfg.supabase_url, cfg.supabase_anon_key, {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          });
+        }
+        this.supabase = window._supabaseClient;
         this.supabaseReady = true;
 
-        const isRecoveryUrl = window.location.hash.includes('type=recovery') ||
-          new URLSearchParams(window.location.search).get('type') === 'recovery';
+        const hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, ''));
+        const queryParams = new URLSearchParams(window.location.search || '');
+        const urlErrorCode = hashParams.get('error_code') || queryParams.get('error_code');
+        const urlErrorDesc = hashParams.get('error_description') || queryParams.get('error_description');
+        if (urlErrorCode || urlErrorDesc) {
+          if (urlErrorCode === 'otp_expired') {
+            this.loginError = 'O link de confirmação expirou ou já foi utilizado. Tente entrar com sua conta ou solicite um novo link.';
+          } else {
+            this.loginError = this.translateAuthError((urlErrorDesc || urlErrorCode).replace(/\+/g, ' '));
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        const isRecoveryUrl = hashParams.get('type') === 'recovery' ||
+          queryParams.get('type') === 'recovery';
 
         this.supabase.auth.onAuthStateChange(async (event, session) => {
           if (event === 'PASSWORD_RECOVERY') {
