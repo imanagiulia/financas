@@ -1,0 +1,31 @@
+# Ambientes e segredos (NUNCA versionar!)
+.env
+.env.*
+!.env.example
+
+# Bancos de dados locais (contem dados financeiros pessoais!)
+*.db
+*.sqlite
+*.sqlite3
+financas.db*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Vercel
+.vercel/
+
+# SO / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

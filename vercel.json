@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "schedules": {
+    "daily-selic": {
+      "schedule": "30 6 * * *",
+      "timezone": "America/Sao_Paulo",
+      "path": "/api/cron/daily-selic",
+      "requestMethod": "POST"
+    },
+    "daily-alerts": {
+      "schedule": "0 8 * * *",
+      "timezone": "America/Sao_Paulo",
+      "path": "/api/cron/daily-alerts",
+      "requestMethod": "POST"
+    },
+    "monthly-summary": {
+      "schedule": "0 8 1 * *",
+      "timezone": "America/Sao_Paulo",
+      "path": "/api/cron/monthly-summary",
+      "requestMethod": "POST"
+    }
+  }
+}
